@@ -3342,13 +3342,11 @@ Widget loadPowered(BuildContext context) {
   return MouseRegion(
     cursor: SystemMouseCursors.click,
     child: GestureDetector(
-      onTap: () {
-        launchUrl(Uri.parse('https://rustdesk.com'));
-      },
+      onTap: null, // 禁用点击事件
       child: Opacity(
           opacity: 0.5,
           child: Text(
-            translate("powered_by_me"),
+            "", // 文本为空
             overflow: TextOverflow.clip,
             style: Theme.of(context)
                 .textTheme
