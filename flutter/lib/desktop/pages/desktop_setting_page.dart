@@ -1436,61 +1436,64 @@ class _NetworkState extends State<_Network> with AutomaticKeepAliveClientMixin {
     ]).marginOnly(bottom: _kListViewBottomMargin);
   }
 
-Widget network(BuildContext context) {
-  final hideServer = true;  // 强制隐藏 ID/Relay Server
-  final hideProxy = isWeb || bind.mainGetBuildinOption(key: kOptionHideProxySetting) == 'Y';
+  Widget network(BuildContext context) {
+    final hideServer =
+        bind.mainGetBuildinOption(key: kOptionHideServerSetting) == 'Y';
+    final hideProxy =
+        isWeb || bind.mainGetBuildinOption(key: kOptionHideProxySetting) == 'Y';
 
-  if (hideServer && hideProxy) {
-    return Offstage();
-  }
+    if (hideServer && hideProxy) {
+      return Offstage();
+    }
 
-  return _Card(
-    title: 'Network',
-    children: [
-      Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 强制隐藏 ID/Relay Server，去掉相关判断
-            if (!hideServer)  // 这里的条件永远不成立，因为 hideServer 是 true
-              ListTile(
-                leading: Icon(Icons.dns_outlined, color: _accentColor),
-                title: Text(
-                  translate('ID/Relay Server'),
-                  style: TextStyle(fontSize: _kContentFontSize),
+    return _Card(
+      title: 'Network',
+      children: [
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (false)
+                ListTile(
+                  leading: Icon(Icons.dns_outlined, color: _accentColor),
+                  title: Text(
+                    translate('ID/Relay Server'),
+                    style: TextStyle(fontSize: _kContentFontSize),
+                  ),
+                  enabled: !locked,
+                  onTap: () => showServerSettings(gFFI.dialogManager),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                  minLeadingWidth: 0,
+                  horizontalTitleGap: 10,
                 ),
-                enabled: !locked,
-                onTap: () => showServerSettings(gFFI.dialogManager),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+              if (!hideServer && !hideProxy)
+                Divider(height: 1, indent: 16, endIndent: 16),
+              if (!hideProxy)
+                ListTile(
+                  leading:
+                      Icon(Icons.network_ping_outlined, color: _accentColor),
+                  title: Text(
+                    translate('Socks5/Http(s) Proxy'),
+                    style: TextStyle(fontSize: _kContentFontSize),
+                  ),
+                  enabled: !locked,
+                  onTap: changeSocks5Proxy,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                  minLeadingWidth: 0,
+                  horizontalTitleGap: 10,
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                minLeadingWidth: 0,
-                horizontalTitleGap: 10,
-              ),
-            if (!hideServer && !hideProxy)
-              Divider(height: 1, indent: 16, endIndent: 16),
-            if (!hideProxy)
-              ListTile(
-                leading: Icon(Icons.network_ping_outlined, color: _accentColor),
-                title: Text(
-                  translate('Socks5/Http(s) Proxy'),
-                  style: TextStyle(fontSize: _kContentFontSize),
-                ),
-                enabled: !locked,
-                onTap: changeSocks5Proxy,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                minLeadingWidth: 0,
-                horizontalTitleGap: 10,
-              ),
-          ],
+            ],
+          ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 }
 
 
