@@ -1436,64 +1436,43 @@ class _NetworkState extends State<_Network> with AutomaticKeepAliveClientMixin {
     ]).marginOnly(bottom: _kListViewBottomMargin);
   }
 
-  Widget network(BuildContext context) {
-    final hideServer =
-        bind.mainGetBuildinOption(key: kOptionHideServerSetting) == 'Y';
-    final hideProxy =
-        isWeb || bind.mainGetBuildinOption(key: kOptionHideProxySetting) == 'Y';
+Widget network(BuildContext context) {
+  final hideProxy = 
+      isWeb || bind.mainGetBuildinOption(key: kOptionHideProxySetting) == 'Y';
 
-    if (hideServer && hideProxy) {
-      return Offstage();
-    }
-
-    return _Card(
-      title: 'Network',
-      children: [
-        Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (!hideServer)
-                ListTile(
-                  leading: Icon(Icons.dns_outlined, color: _accentColor),
-                  title: Text(
-                    translate('ID/Relay Server'),
-                    style: TextStyle(fontSize: _kContentFontSize),
-                  ),
-                  enabled: !locked,
-                  onTap: () => showServerSettings(gFFI.dialogManager),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                  minLeadingWidth: 0,
-                  horizontalTitleGap: 10,
-                ),
-              if (!hideServer && !hideProxy)
-                Divider(height: 1, indent: 16, endIndent: 16),
-              if (!hideProxy)
-                ListTile(
-                  leading:
-                      Icon(Icons.network_ping_outlined, color: _accentColor),
-                  title: Text(
-                    translate('Socks5/Http(s) Proxy'),
-                    style: TextStyle(fontSize: _kContentFontSize),
-                  ),
-                  enabled: !locked,
-                  onTap: changeSocks5Proxy,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                  minLeadingWidth: 0,
-                  horizontalTitleGap: 10,
-                ),
-            ],
-          ),
-        ),
-      ],
-    );
+  if (hideProxy) {
+    return Offstage(); // 如果 Proxy 也隐藏，则整个界面隐藏
   }
+
+  return _Card(
+    title: 'Network',
+    children: [
+      Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 不再显示 ID/Relay Server 选项
+            if (!hideProxy)
+              ListTile(
+                leading: Icon(Icons.network_ping_outlined, color: _accentColor),
+                title: Text(
+                  translate('Socks5/Http(s) Proxy'),
+                  style: TextStyle(fontSize: _kContentFontSize),
+                ),
+                enabled: !locked,
+                onTap: changeSocks5Proxy,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                minLeadingWidth: 0,
+                horizontalTitleGap: 10,
+              ),
+          ],
+        ),
+      ),
+    ],
+  );
 }
 
 class _Display extends StatefulWidget {
